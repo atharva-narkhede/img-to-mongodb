@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Uploaded Images</title>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+    <h1>Uploaded Images</h1>
+    <div class="nav-links">
+        <a href="index.html">Upload Image</a>
+    </div>
+    <div id="images" class="image-container"></div>
+    <div id="loader" class="loader"></div>
+    <div id="response" class="message"></div>
+    <script>
+        async function fetchImages() {
+            const loader = document.getElementById('loader');
+            const responseDiv = document.getElementById('response');
+            try {
+                // Fetch images from the server
+                const response = await fetch('/images');
+                const images = await response.json();
+                const imagesContainer = document.getElementById('images');
+                imagesContainer.innerHTML = '';
+                
+                // Iterate through images and display each one with lazy loading
+                images.forEach(image => {
+                    const imgElement = document.createElement('img');
+                    imgElement.src = `data:${image.img.contentType};base64,${arrayBufferToBase64(image.img.data.data)}`;
+                    imgElement.loading = 'lazy'; // Enable lazy loading
+                    imagesContainer.appendChild(imgElement);
+                });
+                
+                // Hide loader
+                loader.style.display = 'none';
+            } catch (error) {
+                // Hide loader and show error message
+                loader.style.display = 'none';
+                responseDiv.style.display = 'block';
+                responseDiv.textContent = 'Error fetching images.';
+                responseDiv.className = 'message error';
+                console.error('Error:', error);
+            }
+        }
+
+        // Convert array buffer to base64 string
+        function arrayBufferToBase64(buffer) {
+            let binary = '';
+            const bytes = new Uint8Array(buffer);
+            const len = bytes.byteLength;
+            for (let i = 0; i < len; i++) {
+                binary += String.fromCharCode(bytes[i]);
+            }
+            return window.btoa(binary);
+        }
+
+        // Fetch images on page load
+        fetchImages();
+    </script>
+</body>
+</html>

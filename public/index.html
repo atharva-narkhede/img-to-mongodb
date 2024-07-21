@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload</title>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+    <h1>Upload Image</h1>
+    <div class="nav-links">
+        <a href="view-images.html">View Uploaded Images</a>
+    </div>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" name="image" id="imageInput" required>
+        <button type="submit">Upload</button>
+    </form>
+    <div id="response" class="message"></div>
+    <div id="loader" class="loader" style="display: none;"></div>
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Get references to elements
+            const responseDiv = document.getElementById('response');
+            const loader = document.getElementById('loader');
+            const formData = new FormData();
+            formData.append('image', document.getElementById('imageInput').files[0]);
+
+            // Hide response message and show loader
+            responseDiv.style.display = 'none';
+            loader.style.display = 'block';
+
+            // Perform the fetch to upload the image
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                // Hide loader and show response message
+                loader.style.display = 'none';
+                responseDiv.style.display = 'block';
+                responseDiv.textContent = data;
+                responseDiv.className = 'message success';
+            })
+            .catch(error => {
+                // Hide loader and show error message
+                loader.style.display = 'none';
+                responseDiv.style.display = 'block';
+                responseDiv.textContent = 'Error uploading image.';
+                responseDiv.className = 'message error';
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>

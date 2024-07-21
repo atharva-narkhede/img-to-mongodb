@@ -1,0 +1,21 @@
+{
+  "name": "img-to-mongodb",
+  "version": "1.0.0",
+  "description": "Save images to Mongodb ",
+  "main": "server.js",
+  "scripts": {
+    "test": "NA",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "mongodb"
+  ],
+  "author": "Atharva Narkhede",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2",
+    "mongoose": "^8.5.1",
+    "multer": "^1.4.5-lts.1",
+    "sharp": "^0.33.4"
+  }
+}
